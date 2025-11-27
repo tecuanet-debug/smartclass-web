@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SmartClass - Subtítulos en Vivo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>SmartClass — Subtítulos en Vivo</h1>
+    <div id="controls">
+      <button id="startBtn">Iniciar subtítulos</button>
+      <button id="stopBtn" disabled>Detener</button>
+      <select id="langSelect">
+        <option value="es-MX">Español (México)</option>
+        <option value="es-ES">Español (España)</option>
+        <option value="en-US">Inglés (EE. UU.)</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <section id="captionsContainer" aria-live="polite">
+      <div id="captions" class="caption">Presiona "Iniciar subtítulos" para comenzar...</div>
+    </section>
+
+    <section id="quickActions">
+      <h2>Comunicación rápida</h2>
+      <div class="btnGrid">
+        <button class="quickBtn" data-code="NECESITO_AYUDA">Necesito ayuda</button>
+        <button class="quickBtn" data-code="NO_ENTENDI">No entendí</button>
+        <button class="quickBtn" data-code="REPITEME">Repite por favor</button>
+        <button class="quickBtn" data-code="IR_BANO">Necesito ir al baño</button>
+        <button class="quickBtn" data-code="TODO_BIEN">Todo bien</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="caption.js"></script>
+</body>
+</html>
