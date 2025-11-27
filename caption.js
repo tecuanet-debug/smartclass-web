@@ -1,5 +1,6 @@
-// Obtener referencias a los elementos del HTML
-// ¡IMPORTANTE! Se corrigen los nombres de ID/Clases para que coincidan con index.html
+// -------------------------------------------------------------------------
+// 1. REFERENCIAS A ELEMENTOS DEL HTML (Corregidas: captions, quickBtn)
+// -------------------------------------------------------------------------
 const subtitleBox = document.getElementById("captions"); 
 const quickButtons = document.querySelectorAll(".quickBtn"); 
 const startBtn = document.getElementById("startBtn");
@@ -9,7 +10,9 @@ const langSelect = document.getElementById("langSelect");
 let recognition;
 let isListening = false;
 
-// Verifica compatibilidad
+// -------------------------------------------------------------------------
+// 2. CONFIGURACIÓN DEL RECONOCIMIENTO DE VOZ
+// -------------------------------------------------------------------------
 if (!("webkitSpeechRecognition" in window)) {
     alert("Tu navegador no soporta subtítulos en vivo (Web Speech API).");
     startBtn.disabled = true;
@@ -30,6 +33,7 @@ if (!("webkitSpeechRecognition" in window)) {
 
     recognition.onerror = (e) => {
         console.error("Error de reconocimiento:", e);
+        // Muestra el mensaje de error de micrófono
         subtitleBox.innerText = "Error: Asegúrate de permitir el uso del micrófono.";
         stopListeningState();
     };
@@ -44,7 +48,11 @@ if (!("webkitSpeechRecognition" in window)) {
     }
 }
 
-// Función auxiliar para restablecer el estado del botón a "Detenido"
+// -------------------------------------------------------------------------
+// 3. FUNCIONES AUXILIARES
+// -------------------------------------------------------------------------
+
+// Función para restablecer el estado del botón a "Detenido"
 function stopListeningState() {
     isListening = false;
     startBtn.innerText = "Iniciar subtítulos";
@@ -66,17 +74,17 @@ function toggleSubtitles() {
     }
 }
 
-// ------------------------------------------------
-// VINCULACIÓN DE EVENTOS (LA PARTE ESENCIAL QUE FALTABA)
-// ------------------------------------------------
+// -------------------------------------------------------------------------
+// 4. VINCULACIÓN DE EVENTOS (LA PARTE ESENCIAL QUE FALTABA)
+// -------------------------------------------------------------------------
 
-// 1. Conectar el botón de Inicio/Detener al hacer clic
+// Conectar el botón de Inicio/Detener al hacer clic
 startBtn.addEventListener("click", toggleSubtitles);
 
-// 2. Conectar el botón de Detener al hacer clic
+// Conectar el botón de Detener al hacer clic
 stopBtn.addEventListener("click", toggleSubtitles);
 
-// 3. Manejar el cambio de idioma
+// Manejar el cambio de idioma
 langSelect.addEventListener("change", () => {
     recognition.lang = langSelect.value;
     if (isListening) {
@@ -85,13 +93,27 @@ langSelect.addEventListener("change", () => {
     }
 });
 
-// 4. Botones de frases rápidas
+// 5. BOTONES DE FRASES RÁPIDAS (CORREGIDO CON VOZ)
 quickButtons.forEach(btn => {
     btn.addEventListener("click", () => {
+        // Detener la escucha de subtítulos si está activa
         if (isListening) {
             recognition.stop();
             stopListeningState();
         }
-        subtitleBox.innerText = btn.innerText;
+
+        const phrase = btn.innerText;
+        
+        // 1. Mostrar la frase en pantalla
+        subtitleBox.innerText = phrase;
+        
+        // 2. Crear el objeto de voz (Text-to-Speech)
+        const speech = new SpeechSynthesisUtterance(phrase);
+        
+        // Establecer idioma para la voz
+        speech.lang = langSelect.value; 
+
+        // 3. Hacer que el dispositivo hable
+        window.speechSynthesis.speak(speech);
     });
 });
