@@ -1,19 +1,151 @@
-#manualInput textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Para incluir padding y borde en el ancho total */
-    resize: vertical; /* Permitir redimensionar solo verticalmente */
+/* --- ESTILOS GENERALES Y FUENTES --- */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Fuente moderna y limpia */
+    margin: 0;
+    padding: 20px;
+    background: #F5F7FA; /* Fondo Gris Claro/Blanco */
+    color: #455A64; /* Texto General Gris Oscuro */
 }
 
-#manualInput #speakManualBtn {
-    padding: 12px 16px;
-    font-size: 18px;
+main {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+header h1 { 
+    font-size: 28px; 
+    margin: 0 0 15px 0; 
+    color: #1A237E; /* Azul Marino Oscuro */
+    font-weight: 500;
+}
+
+/* --- CONTROLES SUPERIORES --- */
+#controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#controls button, #langSelect {
+    padding: 10px 18px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #B0BEC5; /* Borde gris suave */
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+#startBtn, #stopBtn {
+    background: #00BCD4; /* Azul Aqua Brillante */
+    color: white;
+    border-color: #00BCD4;
+    font-weight: bold;
+}
+
+#stopBtn:disabled {
+    background: #B0BEC5; /* Gris cuando está deshabilitado */
+    border-color: #B0BEC5;
+    color: #546E7A;
+}
+
+
+/* --- SECCIÓN DE SUBTÍTULOS (LA MÁS IMPORTANTE) --- */
+#captionsContainer { 
+    background: #1A237E; /* Azul Marino Oscuro */
+    color: #E0F7FA; /* Blanco Hielo */
+    padding: 25px; 
+    border-radius: 12px; 
+    min-height: 100px; 
+    margin-bottom: 30px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.caption { 
+    font-size: 24px; /* Un poco más grande para el tablet */
+    line-height: 1.5; 
+    font-weight: 300;
+}
+
+
+/* --- SECCIÓN DE ESCRITURA MANUAL --- */
+#manualInput {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #E8EAF6; /* Fondo lila muy claro */
     border-radius: 8px;
-    background: #e67e22; /* Un color diferente para destacarlo */
+}
+
+#manualInput h2 {
+    font-size: 20px;
+    margin-top: 0;
+    color: #3F51B5; /* Azul índigo */
+}
+
+#manualText {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #B0BEC5;
+    border-radius: 6px;
+    box-sizing: border-box; 
+    resize: vertical; 
+    font-size: 16px;
+}
+
+#speakManualBtn {
+    padding: 12px 20px;
+    font-size: 17px;
+    border-radius: 6px;
+    background: #FF9800; /* Naranja brillante (contraste) */
     color: #fff;
     border: none;
+    font-weight: bold;
     cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+#speakManualBtn:active, .quickBtn:active, #startBtn:active {
+    transform: scale(0.98);
+}
+
+
+/* --- SECCIÓN DE COMUNICACIÓN RÁPIDA --- */
+#quickActions {
+    margin-bottom: 20px;
+}
+
+#quickActions h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #455A64;
+}
+
+.btnGrid { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    justify-content: flex-start; /* Alinear a la izquierda */
+}
+
+.quickBtn { 
+    padding: 15px 20px; 
+    font-size: 16px; 
+    border-radius: 6px; 
+    background: #4FC3F7; /* Azul Medio Suave */
+    color: white; 
+    border: none; 
+    min-width: 140px; 
+    flex-grow: 1; /* Permitir que crezcan un poco para llenar el espacio */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background 0.2s;
+}
+
+.quickBtn:hover {
+    background: #29B6F6; /* Un poco más oscuro al pasar el ratón */
 }

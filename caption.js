@@ -1,21 +1,56 @@
 // -------------------------------------------------------------------------
-// 1. REFERENCIAS A ELEMENTOS DEL HTML (Se añaden los nuevos elementos)
+// 1. REFERENCIAS A ELEMENTOS DEL HTML
 // -------------------------------------------------------------------------
 const subtitleBox = document.getElementById("captions"); 
 const quickButtons = document.querySelectorAll(".quickBtn"); 
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const langSelect = document.getElementById("langSelect");
-
-// NUEVAS REFERENCIAS PARA ESCRIBIR
 const manualText = document.getElementById("manualText");
 const speakManualBtn = document.getElementById("speakManualBtn");
 
 let recognition;
 let isListening = false;
+let availableVoices = []; 
 
 // -------------------------------------------------------------------------
-// 2. CONFIGURACIÓN DEL RECONOCIMIENTO DE VOZ (SIN CAMBIOS)
+// 2. FUNCIONES DE LECTURA DE VOZ (SPEAK)
+// -------------------------------------------------------------------------
+
+// Función para obtener las voces disponibles del sistema operativo
+function populateVoiceList() {
+    availableVoices = window.speechSynthesis.getVoices();
+}
+
+// Función central para hablar (usada por los botones y el texto manual)
+function speakPhrase(phrase) {
+    if (phrase.length === 0) return;
+
+    // Detener la escucha si está activa
+    if (isListening) {
+        recognition.stop();
+        stopListeningState();
+    }
+
+    // Mostrar la frase en pantalla
+    subtitleBox.innerText = phrase;
+    
+    // Configurar y hacer que hable
+    const speech = new SpeechSynthesisUtterance(phrase);
+    speech.lang = langSelect.value; 
+
+    // Opcional: Intenta usar una voz específica del idioma para mayor compatibilidad
+    const selectedVoice = availableVoices.find(voice => voice.lang === speech.lang);
+    if (selectedVoice) {
+        speech.voice = selectedVoice;
+    }
+
+    window.speechSynthesis.speak(speech);
+}
+
+
+// -------------------------------------------------------------------------
+// 3. CONFIGURACIÓN DEL RECONOCIMIENTO DE VOZ (MICRÓFONO)
 // -------------------------------------------------------------------------
 if (!("webkitSpeechRecognition" in window)) {
     alert("Tu navegador no soporta subtítulos en vivo (Web Speech API).");
@@ -36,7 +71,7 @@ if (!("webkitSpeechRecognition" in window)) {
     };
 
     recognition.onerror = (e) => {
-        console.error("Error de reconocimiento:", e);
+        console.error("Error de reconocimiento:", e.error);
         subtitleBox.innerText = "Error: Asegúrate de permitir el uso del micrófono.";
         stopListeningState();
     };
@@ -50,9 +85,7 @@ if (!("webkitSpeechRecognition" in window)) {
     }
 }
 
-// -------------------------------------------------------------------------
-// 3. FUNCIONES AUXILIARES (SIN CAMBIOS)
-// -------------------------------------------------------------------------
+// Funciones de control de estado
 function stopListeningState() {
     isListening = false;
     startBtn.innerText = "Iniciar subtítulos";
@@ -73,15 +106,26 @@ function toggleSubtitles() {
     }
 }
 
+
 // -------------------------------------------------------------------------
-// 4. VINCULACIÓN DE EVENTOS Y NUEVA FUNCIÓN DE ESCRITURA
+// 4. VINCULACIÓN DE EVENTOS (El corazón de la interacción)
 // -------------------------------------------------------------------------
 
-// Conexiones de subtítulos (Sin cambios)
-startBtn.addEventListener("click", toggleSubtitles);
+// Cargar las voces tan pronto como estén disponibles (Necesario para TTS)
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+
+// Conexión del botón de Inicio: detiene la voz antes de iniciar el micrófono
+startBtn.addEventListener("click", () => {
+    window.speechSynthesis.cancel(); // Detiene cualquier voz que esté hablando
+    toggleSubtitles();
+});
+
+// Conexión del botón de Detener
 stopBtn.addEventListener("click", toggleSubtitles);
 
-// Manejar el cambio de idioma (Sin cambios)
+// Manejar el cambio de idioma
 langSelect.addEventListener("change", () => {
     recognition.lang = langSelect.value;
     if (isListening) {
@@ -90,25 +134,17 @@ langSelect.addEventListener("change", () => {
     }
 });
 
-// NUEVA FUNCIÓN: LEER TEXTO ESCRITO EN VOZ ALTA
+// Botón de Leer en voz alta
 speakManualBtn.addEventListener("click", () => {
     const phrase = manualText.value.trim(); 
-    
-    if (phrase.length > 0) {
-        // 1. Detener la escucha si está activa
-        if (isListening) {
-            recognition.stop();
-            stopListeningState();
-        }
+    speakPhrase(phrase);
+    manualText.value = ''; 
+});
 
-        // 2. Mostrar la frase en pantalla
-        subtitleBox.innerText = phrase;
-        
-        // 3. TTS: Hablar la frase
-        const speech = new SpeechSynthesisUtterance(phrase);
-        speech.lang = langSelect.value; 
 
-        window.speechSynthesis.speak(speech);
-        
-        // 4. Limpiar el cuadro de texto
-        manualText.v…
+// Botones de frases rápidas
+quickButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        speakPhrase(btn.innerText);
+    });
+});
