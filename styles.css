@@ -1,7 +1,19 @@
-body { font-family: Arial, sans-serif; margin: 10px; background:#f7f7f7; color:#111; }
-header h1 { font-size: 20px; margin:0 0 8px 0; }
-#captionsContainer { background:#000; color:#0f0; padding:16px; border-radius:8px; min-height:80px; margin-bottom:12px; }
-.caption { font-size:20px; line-height:1.4; }
-#quickActions .btnGrid { display:flex; flex-wrap:wrap; gap:8px; }
-.quickBtn { padding:12px 16px; font-size:18px; border-radius:8px; background:#0057e7; color:#fff; border:none; min-width:150px; }
-.quickBtn:active { transform:scale(.98); }
+#manualInput textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Para incluir padding y borde en el ancho total */
+    resize: vertical; /* Permitir redimensionar solo verticalmente */
+}
+
+#manualInput #speakManualBtn {
+    padding: 12px 16px;
+    font-size: 18px;
+    border-radius: 8px;
+    background: #e67e22; /* Un color diferente para destacarlo */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}

@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------
-// 1. REFERENCIAS A ELEMENTOS DEL HTML (Corregidas: captions, quickBtn)
+// 1. REFERENCIAS A ELEMENTOS DEL HTML (Se añaden los nuevos elementos)
 // -------------------------------------------------------------------------
 const subtitleBox = document.getElementById("captions"); 
 const quickButtons = document.querySelectorAll(".quickBtn"); 
@@ -7,11 +7,15 @@ const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const langSelect = document.getElementById("langSelect");
 
+// NUEVAS REFERENCIAS PARA ESCRIBIR
+const manualText = document.getElementById("manualText");
+const speakManualBtn = document.getElementById("speakManualBtn");
+
 let recognition;
 let isListening = false;
 
 // -------------------------------------------------------------------------
-// 2. CONFIGURACIÓN DEL RECONOCIMIENTO DE VOZ
+// 2. CONFIGURACIÓN DEL RECONOCIMIENTO DE VOZ (SIN CAMBIOS)
 // -------------------------------------------------------------------------
 if (!("webkitSpeechRecognition" in window)) {
     alert("Tu navegador no soporta subtítulos en vivo (Web Speech API).");
@@ -33,14 +37,12 @@ if (!("webkitSpeechRecognition" in window)) {
 
     recognition.onerror = (e) => {
         console.error("Error de reconocimiento:", e);
-        // Muestra el mensaje de error de micrófono
         subtitleBox.innerText = "Error: Asegúrate de permitir el uso del micrófono.";
         stopListeningState();
     };
 
     recognition.onend = () => {
         if (isListening) {
-             // Reiniciar si está en modo continuo
              recognition.start();
         } else {
             stopListeningState();
@@ -49,10 +51,8 @@ if (!("webkitSpeechRecognition" in window)) {
 }
 
 // -------------------------------------------------------------------------
-// 3. FUNCIONES AUXILIARES
+// 3. FUNCIONES AUXILIARES (SIN CAMBIOS)
 // -------------------------------------------------------------------------
-
-// Función para restablecer el estado del botón a "Detenido"
 function stopListeningState() {
     isListening = false;
     startBtn.innerText = "Iniciar subtítulos";
@@ -60,7 +60,6 @@ function stopListeningState() {
     stopBtn.disabled = true;
 }
 
-// Iniciar o detener subtítulos
 function toggleSubtitles() {
     if (!isListening) {
         recognition.start();
@@ -75,16 +74,14 @@ function toggleSubtitles() {
 }
 
 // -------------------------------------------------------------------------
-// 4. VINCULACIÓN DE EVENTOS (LA PARTE ESENCIAL QUE FALTABA)
+// 4. VINCULACIÓN DE EVENTOS Y NUEVA FUNCIÓN DE ESCRITURA
 // -------------------------------------------------------------------------
 
-// Conectar el botón de Inicio/Detener al hacer clic
+// Conexiones de subtítulos (Sin cambios)
 startBtn.addEventListener("click", toggleSubtitles);
-
-// Conectar el botón de Detener al hacer clic
 stopBtn.addEventListener("click", toggleSubtitles);
 
-// Manejar el cambio de idioma
+// Manejar el cambio de idioma (Sin cambios)
 langSelect.addEventListener("change", () => {
     recognition.lang = langSelect.value;
     if (isListening) {
@@ -93,27 +90,25 @@ langSelect.addEventListener("change", () => {
     }
 });
 
-// 5. BOTONES DE FRASES RÁPIDAS (CORREGIDO CON VOZ)
-quickButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        // Detener la escucha de subtítulos si está activa
+// NUEVA FUNCIÓN: LEER TEXTO ESCRITO EN VOZ ALTA
+speakManualBtn.addEventListener("click", () => {
+    const phrase = manualText.value.trim(); 
+    
+    if (phrase.length > 0) {
+        // 1. Detener la escucha si está activa
         if (isListening) {
             recognition.stop();
             stopListeningState();
         }
 
-        const phrase = btn.innerText;
-        
-        // 1. Mostrar la frase en pantalla
+        // 2. Mostrar la frase en pantalla
         subtitleBox.innerText = phrase;
         
-        // 2. Crear el objeto de voz (Text-to-Speech)
+        // 3. TTS: Hablar la frase
         const speech = new SpeechSynthesisUtterance(phrase);
-        
-        // Establecer idioma para la voz
         speech.lang = langSelect.value; 
 
-        // 3. Hacer que el dispositivo hable
         window.speechSynthesis.speak(speech);
-    });
-});
+        
+        // 4. Limpiar el cuadro de texto
+        manualText.v…
