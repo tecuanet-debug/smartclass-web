@@ -10,11 +10,15 @@ const manualText = document.getElementById("manualText");
 const speakManualBtn = document.getElementById("speakManualBtn");
 const summarizeBtn = document.getElementById("summarizeBtn");
 const summaryOutput = document.getElementById("summaryOutput");
+const showGlossaryBtn = document.getElementById("showGlossaryBtn");
+const glossaryOutput = document.getElementById("glossaryOutput");
 
 let recognition;
 let isListening = false;
 let availableVoices = [];
 let fullTranscript = []; 
+let uniqueTerms = new Set(); 
+let isGlossaryVisible = false;
 
 // -------------------------------------------------------------------------
 // 2. FUNCIONES DE VOZ (TTS)
@@ -24,7 +28,6 @@ function populateVoiceList() {
     availableVoices = window.speechSynthesis.getVoices();
 }
 
-// Forzar la carga de voces (CRUCIAL para móviles)
 if (window.speechSynthesis.onvoiceschanged !== undefined) {
     window.speechSynthesis.onvoiceschanged = populateVoiceList;
 } else {
@@ -51,7 +54,6 @@ function speakPhrase(phrase) {
         speech.voice = selectedVoice;
     }
 
-    // MODIFICACIÓN CRÍTICA PARA FORZAR TTS EN MÓVILES (Activación de motor)
     if (window.speechSynthesis.getVoices().length === 0) {
         window.speechSynthesis.getVoices();
     }
@@ -88,7 +90,9 @@ if (!("webkitSpeechRecognition" in window)) {
         subtitleBox.innerText = finalTranscript + interimTranscript;
 
         if (finalTranscript.length > 0) {
-            fullTranscript.push(finalTranscript.trim());
+            const finalPhrase = finalTranscript.trim();
+            fullTranscript.push(finalPhrase);
+            extractKeywords(finalPhrase); 
         }
     };
 
@@ -114,6 +118,9 @@ function stopListeningState() {
     startBtn.disabled = false;
     stopBtn.disabled = true;
     summarizeBtn.disabled = (fullTranscript.length === 0);
+    // Corrección de la etiqueta del botón para evitar el error de sintaxis en el editor
+    showGlossaryBtn.innerText = "Ver Glosario (" + uniqueTerms.size + " términos)";
+    showGlossaryBtn.disabled = (uniqueTerms.size === 0);
 }
 
 function toggleSubtitles() {
@@ -125,6 +132,7 @@ function toggleSubtitles() {
         startBtn.disabled = true; 
         stopBtn.disabled = false;
         summarizeBtn.disabled = true;
+        showGlossaryBtn.disabled = true;
     } else {
         recognition.stop();
         stopListeningState();
@@ -132,9 +140,56 @@ function toggleSubtitles() {
 }
 
 // -------------------------------------------------------------------------
-// 4. FUNCIONES DE ESTUDIO
+// 4. FUNCIONES DE ESTUDIO (RESUMEN Y GLOSARIO)
 // -------------------------------------------------------------------------
 
+// --- 4.1. FUNCIÓN PRINCIPAL DE GLOSARIO ---
+function extractKeywords(phrase) {
+    const cleanPhrase = phrase.toLowerCase().replace(/[.,:;!?¿¡]/g, '');
+    const words = cleanPhrase.split(/\s+/);
+    
+    const ignoreList = new Set(["el", "la", "los", "las", "un", "una", "unos", "unas", 
+                                "de", "del", "a", "y", "o", "es", "son", "pero", "que", 
+                                "en", "por", "para", "con", "se", "como", "al", "mi", "su"]);
+
+    words.forEach(word => {
+        if (word.length > 4 && !ignoreList.has(word) && isNaN(word)) {
+            uniqueTerms.add(word);
+        }
+    });
+
+    // Corrección de la etiqueta del botón para evitar el error de sintaxis en el editor
+    showGlossaryBtn.innerText = "Ver Glosario (" + uniqueTerms.size + " términos)";
+}
+
+function toggleGlossaryView() {
+    if (isGlossaryVisible) {
+        glossaryOutput.innerHTML = '';
+        showGlossaryBtn.innerText = "Ver Glosario (" + uniqueTerms.size + " términos)";
+        isGlossaryVisible = false;
+    } else {
+        if (uniqueTerms.size === 0) {
+            glossaryOutput.innerHTML = '<p style="color:red;">Aún no se han detectado términos clave.</p>';
+            return;
+        }
+
+        let outputHtml = '<h3>🔍 Glosario de Clase</h3><ul>';
+        
+        const sortedTerms = Array.from(uniqueTerms).sort();
+
+        sortedTerms.forEach(term => {
+            outputHtml += '<li><strong>' + term.charAt(0).toUpperCase() + term.slice(1) + '</strong></li>';
+        });
+        
+        outputHtml += '</ul><p>Estos son los términos únicos detectados en la clase.</p>';
+        
+        glossaryOutput.innerHTML = outputHtml;
+        showGlossaryBtn.innerText = "Ocultar Glosario";
+        isGlossaryVisible = true;
+    }
+}
+
+// --- 4.2. FUNCIÓN DE RESUMEN ---
 function generateSummary() {
     if (fullTranscript.length === 0) {
         summaryOutput.innerHTML = '<p style="color:red;">No hay texto guardado.</p>';
@@ -158,8 +213,13 @@ function generateSummary() {
     }
 
     summaryOutput.innerHTML = summaryText;
+    
     fullTranscript = []; 
+    uniqueTerms = new Set();
     summarizeBtn.disabled = true;
+    showGlossaryBtn.disabled = true;
+    showGlossaryBtn.innerText = "Ver Glosario (0 términos)";
+    glossaryOutput.innerHTML = '';
 }
 
 // -------------------------------------------------------------------------
@@ -179,6 +239,7 @@ langSelect.addEventListener("change", () => {
 });
 
 summarizeBtn.addEventListener("click", generateSummary);
+showGlossaryBtn.addEventListener("click", toggleGlossaryView); 
 
 speakManualBtn.addEventListener("click", () => {
     const phrase = manualText.value.trim(); 

@@ -81,7 +81,7 @@ header h1 {
 }
 
 
-/* --- SECCIONES DE ACCIÓN --- */
+/* --- SECCIONES DE ACCIÓN GENERAL --- */
 
 #manualInput, #tools, #quickActions {
     margin-bottom: 30px;
@@ -97,6 +97,15 @@ h2 {
     color: #4A4E69;
 }
 
+.tool-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap; /* Para que se adapte bien en móvil */
+}
+
+/* --- ESTILOS DE BOTONES DE ACCIÓN --- */
+
 #manualText {
     width: 100%;
     padding: 12px;
@@ -108,19 +117,58 @@ h2 {
     font-size: 16px;
 }
 
-#speakManualBtn, #summarizeBtn {
+#speakManualBtn, #summarizeBtn, #showGlossaryBtn {
     padding: 12px 20px;
     font-size: 16px;
     border-radius: 8px;
-    background: #FEEEDF; /* Melocotón Pastel */
-    color: #4A4E69;
     border: none;
     font-weight: bold;
     cursor: pointer;
-    margin-right: 10px;
+    transition: background 0.2s, transform 0.1s;
+    flex-grow: 1; /* Permite que los botones se expandan */
 }
 
-/* Botones Rápidos */
+#summarizeBtn {
+    background: #FEEEDF; /* Melocotón Pastel */
+    color: #4A4E69;
+}
+
+/* ESTILO ESPECÍFICO: BOTÓN DE GLOSARIO */
+#showGlossaryBtn {
+    background: #B4DFB5; /* Verde Menta Pastel */
+    color: #4A4E69;
+}
+
+#showGlossaryBtn:disabled, #summarizeBtn:disabled {
+    background: #E5E9EC;
+    color: #8D99AE;
+    cursor: not-allowed;
+}
+
+/* --- ESTILO PARA EL CONTENIDO DEL GLOSARIO Y RESUMEN --- */
+
+#summaryOutput, #glossaryOutput {
+    padding: 15px;
+    background: #F8F8FF; /* Blanco muy suave */
+    border: 1px solid #D1D9E0;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+#glossaryOutput ul {
+    list-style: none;
+    padding: 0;
+    columns: 2; /* Mostrar el glosario en dos columnas si hay espacio */
+    margin-top: 10px;
+}
+
+#glossaryOutput li {
+    padding: 5px 0;
+    border-bottom: 1px dotted #D1D9E0;
+}
+
+
+/* --- BOTONES RÁPIDOS --- */
 .btnGrid { 
     display: flex; 
     flex-wrap: wrap; 
