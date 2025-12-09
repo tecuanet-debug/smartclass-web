@@ -10,13 +10,11 @@ const manualText = document.getElementById("manualText");
 const speakManualBtn = document.getElementById("speakManualBtn");
 const summarizeBtn = document.getElementById("summarizeBtn");
 const summaryOutput = document.getElementById("summaryOutput");
-const alertBtn = document.getElementById("alertBtn");
 
 let recognition;
 let isListening = false;
 let availableVoices = [];
 let fullTranscript = []; 
-const EMERGENCY_NUMBER = "555-1234"; 
 
 // -------------------------------------------------------------------------
 // 2. FUNCIONES DE VOZ (TTS)
@@ -26,11 +24,10 @@ function populateVoiceList() {
     availableVoices = window.speechSynthesis.getVoices();
 }
 
-// Forzar la carga de voces (crucial para móviles)
+// Forzar la carga de voces (CRUCIAL para móviles)
 if (window.speechSynthesis.onvoiceschanged !== undefined) {
     window.speechSynthesis.onvoiceschanged = populateVoiceList;
 } else {
-    // Si el evento no se dispara, intentar cargar después de un breve retraso
     setTimeout(populateVoiceList, 500); 
 }
 
@@ -43,7 +40,6 @@ function speakPhrase(phrase) {
         stopListeningState();
     }
     
-    // Cancelar cualquier discurso previo antes de empezar
     window.speechSynthesis.cancel(); 
 
     subtitleBox.innerText = phrase;
@@ -53,6 +49,11 @@ function speakPhrase(phrase) {
     const selectedVoice = availableVoices.find(voice => voice.lang === speech.lang);
     if (selectedVoice) {
         speech.voice = selectedVoice;
+    }
+
+    // MODIFICACIÓN CRÍTICA PARA FORZAR TTS EN MÓVILES (Activación de motor)
+    if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.getVoices();
     }
 
     window.speechSynthesis.speak(speech);
@@ -131,7 +132,7 @@ function toggleSubtitles() {
 }
 
 // -------------------------------------------------------------------------
-// 4. FUNCIONES DE ESTUDIO Y SEGURIDAD
+// 4. FUNCIONES DE ESTUDIO
 // -------------------------------------------------------------------------
 
 function generateSummary() {
@@ -144,7 +145,7 @@ function generateSummary() {
     const words = wholeText.split(/\s+/);
     let summaryText = '';
 
-    if (words.length > 50) { // Reducir el umbral para simulación
+    if (words.length > 50) { 
         const start = words.slice(0, 25).join(' ');
         const end = words.slice(-25).join(' ');
         summaryText = `<h3>⭐ Resumen Generado (Simulado)</h3>
@@ -161,32 +162,23 @@ function generateSummary() {
     summarizeBtn.disabled = true;
 }
 
-function sendEmergencyAlert() {
-    const confirmation = confirm(¿Estás seguro de que deseas llamar al número de emergencia (${EMERGENCY_NUMBER})?);
-    
-    if (confirmation) {
-        // Usa location.href para activar el marcador de llamadas en el celular
-        window.location.href = tel:${EMERGENCY_NUMBER};
-        speakPhrase("Alerta de emergencia activada. Marcando número de contacto.");
-    }
-}
-
 // -------------------------------------------------------------------------
 // 5. VINCULACIÓN DE EVENTOS
 // -------------------------------------------------------------------------
 
 startBtn.addEventListener("click", toggleSubtitles);
 stopBtn.addEventListener("click", toggleSubtitles);
+
 langSelect.addEventListener("change", () => {
     recognition.lang = langSelect.value;
     if (isListening) {
         recognition.stop();
         recognition.start();
     }
+    populateVoiceList(); 
 });
 
 summarizeBtn.addEventListener("click", generateSummary);
-alertBtn.addEventListener("click", sendEmergencyAlert);
 
 speakManualBtn.addEventListener("click", () => {
     const phrase = manualText.value.trim(); 

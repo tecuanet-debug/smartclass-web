@@ -85,6 +85,10 @@ header h1 {
 
 #manualInput, #tools, #quickActions {
     margin-bottom: 30px;
+    padding: 20px;
+    background: #FFFFFF; /* Fondo Blanco para las secciones */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 h2 {
@@ -114,17 +118,6 @@ h2 {
     font-weight: bold;
     cursor: pointer;
     margin-right: 10px;
-}
-
-.alertBtn {
-    padding: 12px 20px;
-    font-size: 16px;
-    border-radius: 8px;
-    background: #FF6B6B; /* Rojo de Alerta */
-    color: white;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
 }
 
 /* Botones Rápidos */
