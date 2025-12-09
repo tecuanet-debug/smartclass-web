@@ -1,10 +1,10 @@
 /* --- ESTILOS GENERALES Y FUENTES --- */
 body {
-    font-family: 'Helvetica Neue', Arial, sans-serif; /* Fuente moderna y limpia */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background: #F5F7FA; /* Fondo Gris Claro/Blanco */
-    color: #455A64; /* Texto General Gris Oscuro */
+    background: #F0F5F9; /* Pastel Gris Claro */
+    color: #4A4E69; /* Gris Púrpura Oscuro */
 }
 
 main {
@@ -18,10 +18,10 @@ header {
 }
 
 header h1 { 
-    font-size: 28px; 
+    font-size: 30px; 
     margin: 0 0 15px 0; 
-    color: #1A237E; /* Azul Marino Oscuro */
-    font-weight: 500;
+    color: #8D99AE; /* Pastel Gris Azulado */
+    font-weight: 600;
 }
 
 /* --- CONTROLES SUPERIORES --- */
@@ -29,123 +29,124 @@ header h1 {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 #controls button, #langSelect {
-    padding: 10px 18px;
+    padding: 12px 20px;
     font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #B0BEC5; /* Borde gris suave */
+    border-radius: 8px;
+    border: none;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
 }
 
-#startBtn, #stopBtn {
-    background: #00BCD4; /* Azul Aqua Brillante */
-    color: white;
-    border-color: #00BCD4;
+#startBtn {
+    background: #FFC7D8; /* Rosa Pastel */
+    color: #4A4E69;
     font-weight: bold;
 }
 
-#stopBtn:disabled {
-    background: #B0BEC5; /* Gris cuando está deshabilitado */
-    border-color: #B0BEC5;
-    color: #546E7A;
+#stopBtn {
+    background: #CBEAEC; /* Aqua Pastel */
+    color: #4A4E69;
 }
 
+#stopBtn:disabled {
+    background: #E5E9EC; /* Gris Pastel cuando está deshabilitado */
+    color: #8D99AE;
+}
 
-/* --- SECCIÓN DE SUBTÍTULOS (LA MÁS IMPORTANTE) --- */
+#langSelect {
+    background: #F0F5F9;
+    border: 1px solid #D1D9E0;
+    color: #4A4E69;
+}
+
+/* --- SECCIÓN DE SUBTÍTULOS (ALTO CONTRASTE) --- */
 #captionsContainer { 
-    background: #1A237E; /* Azul Marino Oscuro */
-    color: #E0F7FA; /* Blanco Hielo */
-    padding: 25px; 
+    background: #1A237E; /* Azul Marino Oscuro (Alto Contraste) */
+    color: #F8F8FF; /* Blanco Suave */
+    padding: 30px; 
     border-radius: 12px; 
-    min-height: 100px; 
+    min-height: 120px; 
     margin-bottom: 30px; 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .caption { 
-    font-size: 24px; /* Un poco más grande para el tablet */
+    font-size: 26px; 
     line-height: 1.5; 
     font-weight: 300;
 }
 
 
-/* --- SECCIÓN DE ESCRITURA MANUAL --- */
-#manualInput {
+/* --- SECCIONES DE ACCIÓN --- */
+
+#manualInput, #tools, #quickActions {
     margin-bottom: 30px;
-    padding: 20px;
-    background: #E8EAF6; /* Fondo lila muy claro */
-    border-radius: 8px;
 }
 
-#manualInput h2 {
-    font-size: 20px;
-    margin-top: 0;
-    color: #3F51B5; /* Azul índigo */
+h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #4A4E69;
 }
 
 #manualText {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
-    border: 1px solid #B0BEC5;
-    border-radius: 6px;
+    border: 1px solid #D1D9E0;
+    border-radius: 8px;
     box-sizing: border-box; 
     resize: vertical; 
     font-size: 16px;
 }
 
-#speakManualBtn {
+#speakManualBtn, #summarizeBtn {
     padding: 12px 20px;
-    font-size: 17px;
-    border-radius: 6px;
-    background: #FF9800; /* Naranja brillante (contraste) */
-    color: #fff;
+    font-size: 16px;
+    border-radius: 8px;
+    background: #FEEEDF; /* Melocotón Pastel */
+    color: #4A4E69;
     border: none;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    margin-right: 10px;
 }
 
-#speakManualBtn:active, .quickBtn:active, #startBtn:active {
-    transform: scale(0.98);
+.alertBtn {
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    background: #FF6B6B; /* Rojo de Alerta */
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-
-/* --- SECCIÓN DE COMUNICACIÓN RÁPIDA --- */
-#quickActions {
-    margin-bottom: 20px;
-}
-
-#quickActions h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    color: #455A64;
-}
-
+/* Botones Rápidos */
 .btnGrid { 
     display: flex; 
     flex-wrap: wrap; 
     gap: 10px; 
-    justify-content: flex-start; /* Alinear a la izquierda */
+    justify-content: flex-start;
 }
 
 .quickBtn { 
     padding: 15px 20px; 
     font-size: 16px; 
-    border-radius: 6px; 
-    background: #4FC3F7; /* Azul Medio Suave */
-    color: white; 
+    border-radius: 8px; 
+    background: #CBEAEC; /* Aqua Pastel */
+    color: #4A4E69; 
     border: none; 
     min-width: 140px; 
-    flex-grow: 1; /* Permitir que crezcan un poco para llenar el espacio */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background 0.2s;
+    flex-grow: 1;
 }
 
-.quickBtn:hover {
-    background: #29B6F6; /* Un poco más oscuro al pasar el ratón */
+/* Efectos de Presionar */
+button:active {
+    transform: scale(0.98);
 }
